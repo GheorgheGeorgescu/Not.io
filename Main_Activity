@@ -11,34 +11,39 @@ import java.io.*
 import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
+    var fileName:EditText? = null
+    var mEditText:EditText? = null
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var mEditText = findViewById<EditText>(R.id.edit_text)
+        var fileName = findViewById<EditText>(R.id.file_text)
+
+
+        //val btnSave = findViewById<Button>(R.id.button_save)
+        //val btnLoad = findViewById<Button>(R.id.button_load)
+
     }
 
-    var fileName = findViewById<EditText>(R.id.file_text)
-    var mEditText:EditText = findViewById(R.id.edit_text)
-
-    val btnSave = findViewById<Button>(R.id.button_save)
-    val btnLoad = findViewById<Button>(R.id.button_load)
 
     fun save (v: View) {
-        var file:String = fileName.text.toString()
-        var data:String = mEditText.text.toString()
+        var file:String = fileName?.text.toString()
+        var data:String = mEditText?.text.toString()
         this.openFileOutput(file, Context.MODE_PRIVATE).use {
             it.write(data.toByteArray())
         }
 
         Toast.makeText(this, "Saved to " + filesDir + "/" + file, Toast.LENGTH_LONG).show()
-        mEditText.text.clear()
-        fileName!!.text.clear()
+        mEditText?.text?.clear()
+        fileName?.text?.clear()
     }
 
     fun load (v: View) {
-        val filename = fileName.text.toString()
+        val filename = fileName!!.text.toString()
         if(filename.trim()!="") {
             var fis : FileInputStream? = openFileInput(filename)
             var isr: InputStreamReader = InputStreamReader(fis)
@@ -51,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 sb.append(text).append("\n")
                 text = br.readLine()
             }
-            mEditText.setText(sb.toString()).toString()
+            mEditText!!.setText(sb.toString()).toString()
         }
     }
 }
