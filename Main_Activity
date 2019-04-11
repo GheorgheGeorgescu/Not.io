@@ -1,0 +1,57 @@
+package com.example.notio
+
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.content.Context
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import java.io.*
+import java.lang.StringBuilder
+
+class MainActivity : AppCompatActivity() {
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+    }
+
+    var fileName = findViewById<EditText>(R.id.file_text)
+    var mEditText:EditText = findViewById(R.id.edit_text)
+
+    val btnSave = findViewById<Button>(R.id.button_save)
+    val btnLoad = findViewById<Button>(R.id.button_load)
+
+    fun save (v: View) {
+        var file:String = fileName.text.toString()
+        var data:String = mEditText.text.toString()
+        this.openFileOutput(file, Context.MODE_PRIVATE).use {
+            it.write(data.toByteArray())
+        }
+
+        Toast.makeText(this, "Saved to " + filesDir + "/" + file, Toast.LENGTH_LONG).show()
+        mEditText.text.clear()
+        fileName!!.text.clear()
+    }
+
+    fun load (v: View) {
+        val filename = fileName.text.toString()
+        if(filename.trim()!="") {
+            var fis : FileInputStream? = openFileInput(filename)
+            var isr: InputStreamReader = InputStreamReader(fis)
+            var br: BufferedReader = BufferedReader(isr)
+            var sb: StringBuilder = StringBuilder()
+            var text: String? = null
+            text = br.readLine()
+            while ({ text = br.readLine(); text } != null) {
+                sb.append(text)
+                sb.append(text).append("\n")
+                text = br.readLine()
+            }
+            mEditText.setText(sb.toString()).toString()
+        }
+    }
+}
